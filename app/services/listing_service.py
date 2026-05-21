@@ -1,7 +1,7 @@
 from datetime import datetime
-from models.marketplace_listing import MarketplaceListing
-from repositories.listing_repo import ListingRepo
-from repositories.item_repo import ItemRepo
+from app.models.marketplace_listing import MarketplaceListing
+from app.repositories.listing_repo import ListingRepo
+from app.repositories.item_repo import ItemRepo
 
 
 class ListingService:

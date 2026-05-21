@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "owner_id": 1,
+    "item_id": 1,
+    "is_listed": false,
+    "rarity": "common",
+    "item_name": "Nigga",
+    "value": 150.0
+  },
+  {
+    "owner_id": 1,
+    "item_id": 2,
+    "is_listed": false,
+    "rarity": "epic",
+    "item_name": "Skibidi Toilet",
+    "value": 500.0
+  }
+]

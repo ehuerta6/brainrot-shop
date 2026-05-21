@@ -1,4 +1,4 @@
-from services.item_service import ItemService
+from app.services.item_service import ItemService
 
 item_service = ItemService()
 
@@ -48,7 +48,9 @@ def prompt_view_all_items() -> None:
 
     for item in items:
         listed = "[LISTED]" if item["is_listed"] else ""
-        print(f"  [{item['item_id']}] {item['item_name']} | {item['rarity']} | ${item['value']:.2f} | owner={item['owner_id']} {listed}")
+        print(
+            f"  [{item['item_id']}] {item['item_name']} | {item['rarity']} | ${item['value']:.2f} | owner={item['owner_id']} {listed}"
+        )
 
 
 def prompt_view_owner_inventory() -> None:
@@ -69,4 +71,6 @@ def prompt_view_owner_inventory() -> None:
     print(f"Owner {owner_id} has {len(items)} item(s):")
     for item in items:
         listed = "[LISTED]" if item["is_listed"] else ""
-        print(f"  [{item['item_id']}] {item['item_name']} | {item['rarity']} | ${item['value']:.2f} {listed}")
+        print(
+            f"  [{item['item_id']}] {item['item_name']} | {item['rarity']} | ${item['value']:.2f} {listed}"
+        )

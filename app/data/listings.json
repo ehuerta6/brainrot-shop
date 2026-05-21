@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "listing_id": 1,
+    "seller_id": 1,
+    "item_id": 1,
+    "price": 200.0,
+    "created_at": "2026-05-20T20:12:57.981587",
+    "active": false
+  }
+]

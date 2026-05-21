@@ -1,6 +1,6 @@
 import json
 import os
-from models.marketplace_listing import MarketplaceListing
+from app.models.marketplace_listing import MarketplaceListing
 
 
 class ListingRepo:

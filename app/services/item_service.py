@@ -1,5 +1,5 @@
-from models.item import Item
-from repositories.item_repo import ItemRepo
+from app.models.item import Item
+from app.repositories.item_repo import ItemRepo
 
 VALID_RARITIES = ["common", "uncommon", "rare", "epic", "legendary"]
 
@@ -8,12 +8,16 @@ class ItemService:
     def __init__(self):
         self.item_repo = ItemRepo()
 
-    def create_item(self, item_name: str, rarity: str, value: float, owner_id: int) -> dict:
+    def create_item(
+        self, item_name: str, rarity: str, value: float, owner_id: int
+    ) -> dict:
         if not item_name.strip():
             raise ValueError("Item name cannot be empty.")
 
         if rarity.lower() not in VALID_RARITIES:
-            raise ValueError(f"Invalid rarity '{rarity}'. Must be one of: {', '.join(VALID_RARITIES)}")
+            raise ValueError(
+                f"Invalid rarity '{rarity}'. Must be one of: {', '.join(VALID_RARITIES)}"
+            )
 
         if value < 0:
             raise ValueError("Item value cannot be negative.")

@@ -1,4 +1,4 @@
-from services.listing_service import ListingService
+from app.services.listing_service import ListingService
 
 listing_service = ListingService()
 
@@ -44,7 +44,9 @@ def prompt_view_active_listings() -> None:
         return
 
     for listing in listings:
-        print(f"  [{listing['listing_id']}] Item #{listing['item_id']} | ${listing['price']:.2f} | seller={listing['seller_id']}")
+        print(
+            f"  [{listing['listing_id']}] Item #{listing['item_id']} | ${listing['price']:.2f} | seller={listing['seller_id']}"
+        )
 
 
 def prompt_cancel_listing() -> None:
