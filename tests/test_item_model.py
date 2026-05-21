@@ -1,4 +1,4 @@
-from app.models.item import Item
+from models.item import Item
 
 
 class TestItemModel:

@@ -1,14 +1,16 @@
 import json
 import os
 import sys
+
 import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "app"))
 
-from app.repositories.item_repo import ItemRepo
-from app.repositories.listing_repo import ListingRepo
-from app.services.item_service import ItemService
-from app.services.listing_service import ListingService
+from repositories.item_repo import ItemRepo
+from repositories.listing_repo import ListingRepo
+from services.item_service import ItemService
+from services.listing_service import ListingService
 
 
 @pytest.fixture

@@ -1,9 +1,9 @@
-from app.cli.item_cli import (
+from cli.item_cli import (
     prompt_create_item,
     prompt_view_all_items,
     prompt_view_owner_inventory,
 )
-from app.cli.listing_cli import (
+from cli.listing_cli import (
     prompt_create_listing,
     prompt_view_active_listings,
     prompt_cancel_listing,

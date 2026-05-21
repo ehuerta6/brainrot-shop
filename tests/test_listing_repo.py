@@ -1,5 +1,5 @@
-from app.models.marketplace_listing import MarketplaceListing
-from app.repositories.listing_repo import ListingRepo
+from models.marketplace_listing import MarketplaceListing
+from repositories.listing_repo import ListingRepo
 
 
 def make_listing(listing_id=1, seller_id=1, item_id=1, price=50.0, active=True):

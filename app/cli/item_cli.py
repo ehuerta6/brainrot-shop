@@ -1,4 +1,4 @@
-from app.services.item_service import ItemService
+from services.item_service import ItemService
 
 item_service = ItemService()
 

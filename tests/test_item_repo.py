@@ -1,5 +1,5 @@
-from app.models.item import Item
-from app.repositories.item_repo import ItemRepo
+from models.item import Item
+from repositories.item_repo import ItemRepo
 
 
 class TestItemRepo:

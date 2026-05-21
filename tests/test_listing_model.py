@@ -1,4 +1,4 @@
-from app.models.marketplace_listing import MarketplaceListing
+from models.marketplace_listing import MarketplaceListing
 
 
 class TestMarketplaceListingModel:

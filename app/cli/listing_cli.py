@@ -1,4 +1,4 @@
-from app.services.listing_service import ListingService
+from services.listing_service import ListingService
 
 listing_service = ListingService()
 
