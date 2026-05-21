@@ -36,6 +36,9 @@ class ItemService:
     def get_item(self, item_id: int) -> dict | None:
         return self.item_repo.get_item_by_id(item_id)
 
+    def get_owner_inventory(self, owner_id: int) -> list[dict]:
+        return self.item_repo.get_items_by_owner(owner_id)
+
     def delete_item(self, item_id: int) -> bool:
         return self.item_repo.delete_item(item_id)
 

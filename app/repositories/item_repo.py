@@ -19,12 +19,25 @@ class ItemRepo:
                 return item
         return None
 
+    def get_items_by_owner(self, owner_id: int) -> list[dict]:
+        items = self.load_from_json()
+        return [item for item in items if item["owner_id"] == owner_id]
+
     def save_item(self, item: Item) -> dict:
         items = self.load_from_json()
         item_dict = item.model_dump()
         items.append(item_dict)
         self.write_to_json(items)
         return item_dict
+
+    def update_item(self, item_id: int, updates: dict) -> dict | None:
+        items = self.load_from_json()
+        for i, item in enumerate(items):
+            if item["item_id"] == item_id:
+                items[i] = {**item, **updates}
+                self.write_to_json(items)
+                return items[i]
+        return None
 
     def delete_item(self, item_id: int) -> bool:
         items = self.load_from_json()
