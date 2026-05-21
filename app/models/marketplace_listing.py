@@ -6,5 +6,4 @@ class MarketplaceListing(BaseModel):
     seller_id: int
     item_id: int
     price: float
-    created_at: str
     active: bool = True

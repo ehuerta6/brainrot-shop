@@ -1,4 +1,3 @@
-from datetime import datetime
 from models.marketplace_listing import MarketplaceListing
 from repositories.listing_repo import ListingRepo
 from repositories.item_repo import ItemRepo
@@ -30,7 +29,6 @@ class ListingService:
             seller_id=seller_id,
             item_id=item_id,
             price=price,
-            created_at=datetime.now().isoformat(),
         )
 
         self.item_repo.update_item(item_id, {"is_listed": True})
