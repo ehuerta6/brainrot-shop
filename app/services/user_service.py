@@ -29,25 +29,25 @@ class UserService:
     def get_all_users(self) -> list[dict]:
         return self.user_repo.get_all_users()
 
-    def add_balance(self, amount: float, username: str) -> dict:
-        user = self.user_repo.get_user_by_username(username)
+    def add_balance(self, amount: float, user_id: int) -> dict:
+        user = self.user_repo.get_user_by_id(user_id)
         if not user:
-            raise ValueError(f"User {username} does not exist.")
+            raise ValueError(f"User {user_id} does not exist.")
         if amount <= 0:
             raise ValueError("Amount must be positive.")
         new_balance = user["balance"] + amount
-        return self.user_repo.update_user(username, {"balance": new_balance})
+        return self.user_repo.update_user(user_id, {"balance": new_balance})
 
-    def remove_balance(self, amount: float, username: str) -> dict:
-        user = self.user_repo.get_user_by_username(username)
+    def remove_balance(self, amount: float, user_id: id) -> dict:
+        user = self.user_repo.get_user_by_id(user_id)
         if not user:
-            raise ValueError(f"User {username} does not exist.")
+            raise ValueError(f"User {user_id} does not exist.")
         if amount <= 0:
             raise ValueError("Amount must be positive.")
         new_balance = user["balance"] - amount
         if new_balance < 0:
             raise ValueError("User can't have a negative balance amount.")
-        return self.user_repo.update_user(username, {"balance": new_balance})
+        return self.user_repo.update_user(user_id, {"balance": new_balance})
 
     def generate_next_id(self) -> int:
         users = self.user_repo.get_all_users()

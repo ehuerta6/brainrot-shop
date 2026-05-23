@@ -35,19 +35,18 @@ class UserRepo:
         self.write_to_json(users)
         return user_dict
 
-    def update_user(self, username: str, updates: dict) -> dict | None:
-        updates.pop("user_id", None)
+    def update_user(self, user_id: int, updates: dict) -> dict | None:
         users = self.load_from_json()
         for i, user in enumerate(users):
-            if user["username"] == username:
+            if user["username"] == user_id:
                 users[i] = {**user, **updates}
                 self.write_to_json(users)
                 return users[i]
         return None
 
-    def delete_user(self, username: str) -> bool:
+    def delete_user(self, user_id: int) -> bool:
         users = self.load_from_json()
-        updated_users = [user for user in users if user["username"] != username]
+        updated_users = [user for user in users if user["username"] != user_id]
         if len(updated_users) < len(users):
             self.write_to_json(updated_users)
             return True
