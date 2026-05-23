@@ -1,7 +1,6 @@
 from services.listing_service import ListingService
 from services.user_service import UserService
-from repositories.listing_repo import ListingRepo
-from repositories.item_repo import ItemRepo
+from services.item_service import ItemService
 
 
 class MarketService:
@@ -9,11 +8,10 @@ class MarketService:
     def __init__(self):
         self.listing_service = ListingService()
         self.user_service = UserService()
-        self.listing_repo = ListingRepo()
-        self.item_repo = ItemRepo()
+        self.item_service = ItemService()
 
     def buy_listing(self, listing_id: int, buyer_id: int) -> dict:
-        listing = self.listing_repo.get_listing_by_id(listing_id)
+        listing = self.listing_service.get_listing_by_id(listing_id)
         if not listing:
             raise ValueError(f"Listing {listing_id} does not exist.")
 
@@ -42,9 +40,9 @@ class MarketService:
         self.user_service.add_balance(price, seller_id)
 
         item_id = listing["item_id"]
-        self.item_repo.update_item(item_id, {"owner_id": buyer_id, "is_listed": False})
+        self.item_service.transfer_ownership(item_id, buyer_id)
 
-        self.listing_repo.update_listing(listing_id, {"active": False})
+        self.listing_service.deactivate_listing(listing_id)
 
         return {
             "listing_id": listing_id,

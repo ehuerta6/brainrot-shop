@@ -43,6 +43,14 @@ class ItemService:
     def get_owner_inventory(self, owner_id: int) -> list[dict]:
         return self.item_repo.get_items_by_owner(owner_id)
 
+    def transfer_ownership(self, item_id: int, new_owner_id: int) -> dict | None:
+        item = self.item_repo.get_item_by_id(item_id)
+        if item is None:
+            raise ValueError(f"Item {item_id} does not exist.")
+        return self.item_repo.update_item(
+            item_id, {"owner_id": new_owner_id, "is_listed": False}
+        )
+
     def delete_item(self, item_id: int) -> bool:
         return self.item_repo.delete_item(item_id)
 

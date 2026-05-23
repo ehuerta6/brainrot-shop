@@ -67,13 +67,10 @@ def temp_user_service(temp_user_repo):
 
 @pytest.fixture
 def temp_market_service(
-    temp_item_repo, temp_listing_repo, temp_user_repo, temp_user_service
+    temp_item_repo, temp_listing_repo, temp_user_service, temp_item_service, temp_listing_service
 ):
     service = MarketService()
-    service.item_repo = temp_item_repo
-    service.listing_repo = temp_listing_repo
     service.user_service = temp_user_service
-    service.listing_service = ListingService()
-    service.listing_service.item_repo = temp_item_repo
-    service.listing_service.listing_repo = temp_listing_repo
+    service.item_service = temp_item_service
+    service.listing_service = temp_listing_service
     return service

@@ -37,6 +37,16 @@ class ListingService:
     def get_active_listings(self) -> list[dict]:
         return self.listing_repo.get_active_listings()
 
+    def get_listing_by_id(self, listing_id: int) -> dict | None:
+        return self.listing_repo.get_listing_by_id(listing_id)
+
+    def deactivate_listing(self, listing_id: int) -> bool:
+        listing = self.listing_repo.get_listing_by_id(listing_id)
+        if listing is None:
+            return False
+        self.listing_repo.update_listing(listing_id, {"active": False})
+        return True
+
     def cancel_listing(self, listing_id: int) -> bool:
         listing = self.listing_repo.get_listing_by_id(listing_id)
         if listing is None:
