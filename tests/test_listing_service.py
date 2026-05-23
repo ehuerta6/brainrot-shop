@@ -7,7 +7,7 @@ class TestListingServiceCreateListing:
         self, temp_listing_service, temp_item_repo
     ):
         temp_item_repo.save_item(
-            Item(owner_id=1, item_id=1, rarity="rare", item_name="Sword", value=50.0)
+            Item(owner_id=1, item_id=1, rarity="rare", item_name="Sword", base_value=50.0)
         )
         listing = temp_listing_service.create_listing(
             item_id=1, seller_id=1, price=75.0
@@ -16,13 +16,13 @@ class TestListingServiceCreateListing:
         assert listing["item_id"] == 1
         assert listing["seller_id"] == 1
         assert listing["price"] == 75.0
-        assert listing["active"] is True
+        assert listing["is_active"] is True
 
     def test_create_listing_marks_item_as_listed(
         self, temp_listing_service, temp_item_repo
     ):
         temp_item_repo.save_item(
-            Item(owner_id=1, item_id=1, rarity="rare", item_name="Sword", value=50.0)
+            Item(owner_id=1, item_id=1, rarity="rare", item_name="Sword", base_value=50.0)
         )
         temp_listing_service.create_listing(item_id=1, seller_id=1, price=75.0)
         item = temp_item_repo.get_item_by_id(1)
@@ -32,10 +32,10 @@ class TestListingServiceCreateListing:
         self, temp_listing_service, temp_item_repo
     ):
         temp_item_repo.save_item(
-            Item(owner_id=1, item_id=1, rarity="rare", item_name="A", value=10.0)
+            Item(owner_id=1, item_id=1, rarity="rare", item_name="A", base_value=10.0)
         )
         temp_item_repo.save_item(
-            Item(owner_id=1, item_id=2, rarity="epic", item_name="B", value=20.0)
+            Item(owner_id=1, item_id=2, rarity="epic", item_name="B", base_value=20.0)
         )
         temp_listing_service.create_listing(item_id=1, seller_id=1, price=50.0)
         second = temp_listing_service.create_listing(item_id=2, seller_id=1, price=60.0)
@@ -49,7 +49,7 @@ class TestListingServiceOwnershipValidation:
 
     def test_cannot_list_item_you_dont_own(self, temp_listing_service, temp_item_repo):
         temp_item_repo.save_item(
-            Item(owner_id=1, item_id=1, rarity="rare", item_name="Sword", value=50.0)
+            Item(owner_id=1, item_id=1, rarity="rare", item_name="Sword", base_value=50.0)
         )
         with pytest.raises(ValueError, match="does not own"):
             temp_listing_service.create_listing(item_id=1, seller_id=999, price=50.0)
@@ -58,7 +58,7 @@ class TestListingServiceOwnershipValidation:
         self, temp_listing_service, temp_item_repo
     ):
         temp_item_repo.save_item(
-            Item(owner_id=1, item_id=1, rarity="rare", item_name="Sword", value=50.0)
+            Item(owner_id=1, item_id=1, rarity="rare", item_name="Sword", base_value=50.0)
         )
         temp_listing_service.create_listing(item_id=1, seller_id=1, price=75.0)
         with pytest.raises(ValueError, match="already listed"):
@@ -68,7 +68,7 @@ class TestListingServiceOwnershipValidation:
         self, temp_listing_service, temp_item_repo
     ):
         temp_item_repo.save_item(
-            Item(owner_id=1, item_id=1, rarity="rare", item_name="Sword", value=50.0)
+            Item(owner_id=1, item_id=1, rarity="rare", item_name="Sword", base_value=50.0)
         )
         with pytest.raises(ValueError, match="greater than zero"):
             temp_listing_service.create_listing(item_id=1, seller_id=1, price=0)
@@ -79,18 +79,18 @@ class TestListingServiceCancelListing:
         self, temp_listing_service, temp_item_repo, temp_listing_repo
     ):
         temp_item_repo.save_item(
-            Item(owner_id=1, item_id=1, rarity="rare", item_name="Sword", value=50.0)
+            Item(owner_id=1, item_id=1, rarity="rare", item_name="Sword", base_value=50.0)
         )
         temp_listing_service.create_listing(item_id=1, seller_id=1, price=75.0)
         temp_listing_service.cancel_listing(1)
         listing = temp_listing_repo.get_listing_by_id(1)
-        assert listing["active"] is False
+        assert listing["is_active"] is False
 
     def test_cancel_listing_unmarks_item_as_listed(
         self, temp_listing_service, temp_item_repo
     ):
         temp_item_repo.save_item(
-            Item(owner_id=1, item_id=1, rarity="rare", item_name="Sword", value=50.0)
+            Item(owner_id=1, item_id=1, rarity="rare", item_name="Sword", base_value=50.0)
         )
         temp_listing_service.create_listing(item_id=1, seller_id=1, price=75.0)
         temp_listing_service.cancel_listing(1)
@@ -104,7 +104,7 @@ class TestListingServiceCancelListing:
         self, temp_listing_service, temp_item_repo
     ):
         temp_item_repo.save_item(
-            Item(owner_id=1, item_id=1, rarity="rare", item_name="Sword", value=50.0)
+            Item(owner_id=1, item_id=1, rarity="rare", item_name="Sword", base_value=50.0)
         )
         temp_listing_service.create_listing(item_id=1, seller_id=1, price=75.0)
         temp_listing_service.cancel_listing(1)
@@ -119,10 +119,10 @@ class TestListingServiceQueries:
         self, temp_listing_service, temp_item_repo
     ):
         temp_item_repo.save_item(
-            Item(owner_id=1, item_id=1, rarity="rare", item_name="A", value=10.0)
+            Item(owner_id=1, item_id=1, rarity="rare", item_name="A", base_value=10.0)
         )
         temp_item_repo.save_item(
-            Item(owner_id=1, item_id=2, rarity="epic", item_name="B", value=20.0)
+            Item(owner_id=1, item_id=2, rarity="epic", item_name="B", base_value=20.0)
         )
         temp_listing_service.create_listing(item_id=1, seller_id=1, price=50.0)
         temp_listing_service.create_listing(item_id=2, seller_id=1, price=60.0)

@@ -14,7 +14,7 @@ class ListingRepo:
 
     def get_active_listings(self) -> list[dict]:
         listings = self.load_from_json()
-        return [listing for listing in listings if listing["active"]]
+        return [listing for listing in listings if listing["is_active"]]
 
     def get_listing_by_id(self, listing_id: int) -> dict | None:
         listings = self.load_from_json()
@@ -30,20 +30,20 @@ class ListingRepo:
         self.write_to_json(listings)
         return listing_dict
 
-    def update_listing(self, listing_id: int, updates: dict) -> dict | None:
+    def update_listing(self, listing_id: int, field_updates: dict) -> dict | None:
         listings = self.load_from_json()
         for i, listing in enumerate(listings):
             if listing["listing_id"] == listing_id:
-                listings[i] = {**listing, **updates}
+                listings[i] = {**listing, **field_updates}
                 self.write_to_json(listings)
                 return listings[i]
         return None
 
     def delete_listing(self, listing_id: int) -> bool:
         listings = self.load_from_json()
-        updated_listings = [l for l in listings if l["listing_id"] != listing_id]
-        if len(updated_listings) < len(listings):
-            self.write_to_json(updated_listings)
+        remaining_listings = [listing for listing in listings if listing["listing_id"] != listing_id]
+        if len(remaining_listings) < len(listings):
+            self.write_to_json(remaining_listings)
             return True
         return False
 

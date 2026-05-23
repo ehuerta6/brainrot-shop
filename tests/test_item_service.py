@@ -7,7 +7,7 @@ class TestItemServiceCreateItem:
         assert result["item_id"] == 1
         assert result["item_name"] == "Gyatt Gauntlet"
         assert result["rarity"] == "epic"
-        assert result["value"] == 250.0
+        assert result["base_value"] == 250.0
         assert result["owner_id"] == 1
         assert result["is_listed"] is False
 
@@ -52,11 +52,11 @@ class TestItemServiceQueries:
 
     def test_get_item_returns_single_item(self, temp_item_service):
         temp_item_service.create_item("Target", "epic", 100.0, owner_id=1)
-        result = temp_item_service.get_item(1)
+        result = temp_item_service.get_item_by_id(1)
         assert result["item_name"] == "Target"
 
     def test_get_item_returns_none_when_not_found(self, temp_item_service):
-        assert temp_item_service.get_item(999) is None
+        assert temp_item_service.get_item_by_id(999) is None
 
     def test_get_owner_inventory_filters_by_owner(self, temp_item_service):
         temp_item_service.create_item("A", "common", 10.0, owner_id=1)
@@ -68,4 +68,4 @@ class TestItemServiceQueries:
     def test_delete_item_removes_item(self, temp_item_service):
         temp_item_service.create_item("Doomed", "common", 5.0, owner_id=1)
         assert temp_item_service.delete_item(1) is True
-        assert temp_item_service.get_item(1) is None
+        assert temp_item_service.get_item_by_id(1) is None

@@ -28,18 +28,18 @@ class UserRepo:
 
     def save_user(self, user: User) -> dict:
         users = self.load_from_json()
-        if any(u["user_id"] == user.user_id for u in users):
+        if any(existing_user["user_id"] == user.user_id for existing_user in users):
             raise ValueError(f"User with id {user.user_id} already exists")
         user_dict = user.model_dump()
         users.append(user_dict)
         self.write_to_json(users)
         return user_dict
 
-    def update_user(self, user_id: int, updates: dict) -> dict | None:
+    def update_user(self, user_id: int, field_updates: dict) -> dict | None:
         users = self.load_from_json()
         for i, user in enumerate(users):
             if user["user_id"] == user_id:
-                users[i] = {**user, **updates}
+                users[i] = {**user, **field_updates}
                 self.write_to_json(users)
                 return users[i]
         return None

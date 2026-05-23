@@ -7,4 +7,4 @@ class Item(BaseModel):
     is_listed: bool = False
     rarity: str
     item_name: str
-    value: float
+    base_value: float

@@ -22,14 +22,14 @@ class ItemService:
         if value < 0:
             raise ValueError("Item value cannot be negative.")
 
-        next_id = self.generate_next_id()
+        next_item_id = self.generate_next_item_id()
 
         new_item = Item(
             owner_id=owner_id,
-            item_id=next_id,
+            item_id=next_item_id,
             rarity=rarity.lower(),
             item_name=item_name.strip(),
-            value=value,
+            base_value=value,
         )
 
         return self.item_repo.save_item(new_item)
@@ -37,7 +37,7 @@ class ItemService:
     def get_all_items(self) -> list[dict]:
         return self.item_repo.get_all_items()
 
-    def get_item(self, item_id: int) -> dict | None:
+    def get_item_by_id(self, item_id: int) -> dict | None:
         return self.item_repo.get_item_by_id(item_id)
 
     def get_owner_inventory(self, owner_id: int) -> list[dict]:
@@ -54,7 +54,7 @@ class ItemService:
     def delete_item(self, item_id: int) -> bool:
         return self.item_repo.delete_item(item_id)
 
-    def generate_next_id(self) -> int:
+    def generate_next_item_id(self) -> int:
         items = self.item_repo.get_all_items()
         if not items:
             return 1

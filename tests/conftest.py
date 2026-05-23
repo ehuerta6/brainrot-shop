@@ -20,8 +20,8 @@ from services.market_service import MarketService
 def temp_item_repo(tmp_path):
     repo = ItemRepo()
     repo.filepath = str(tmp_path / "items.json")
-    with open(repo.filepath, "w") as f:
-        json.dump([], f)
+    with open(repo.filepath, "w") as json_file:
+        json.dump([], json_file)
     return repo
 
 
@@ -29,8 +29,8 @@ def temp_item_repo(tmp_path):
 def temp_listing_repo(tmp_path):
     repo = ListingRepo()
     repo.filepath = str(tmp_path / "listings.json")
-    with open(repo.filepath, "w") as f:
-        json.dump([], f)
+    with open(repo.filepath, "w") as json_file:
+        json.dump([], json_file)
     return repo
 
 
@@ -38,8 +38,8 @@ def temp_listing_repo(tmp_path):
 def temp_user_repo(tmp_path):
     repo = UserRepo()
     repo.filepath = str(tmp_path / "users.json")
-    with open(repo.filepath, "w") as f:
-        json.dump([], f)
+    with open(repo.filepath, "w") as json_file:
+        json.dump([], json_file)
     return repo
 
 

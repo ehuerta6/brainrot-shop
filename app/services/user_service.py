@@ -6,17 +6,17 @@ class UserService:
     def __init__(self):
         self.user_repo = UserRepo()
 
-    def create_user(self, _username: str, _balance: float) -> dict:
-        user = self.user_repo.get_user_by_username(_username)
+    def create_user(self, username: str, starting_balance: float) -> dict:
+        existing_user = self.user_repo.get_user_by_username(username)
 
-        if user is not None:
+        if existing_user is not None:
             raise ValueError(
-                f"User {_username} already exists. Try a different username."
+                f"User {username} already exists. Try a different username."
             )
 
-        next_id = self.generate_next_id()
+        next_user_id = self.generate_next_user_id()
 
-        new_user = User(user_id=next_id, username=_username, balance=_balance)
+        new_user = User(user_id=next_user_id, username=username, balance=starting_balance)
 
         return self.user_repo.save_user(new_user)
 
@@ -35,8 +35,8 @@ class UserService:
             raise ValueError(f"User {user_id} does not exist.")
         if amount <= 0:
             raise ValueError("Amount must be positive.")
-        new_balance = user["balance"] + amount
-        return self.user_repo.update_user(user_id, {"balance": new_balance})
+        updated_balance = user["balance"] + amount
+        return self.user_repo.update_user(user_id, {"balance": updated_balance})
 
     def remove_balance(self, amount: float, user_id: int) -> dict | None:
         user = self.user_repo.get_user_by_id(user_id)
@@ -44,21 +44,21 @@ class UserService:
             raise ValueError(f"User {user_id} does not exist.")
         if amount <= 0:
             raise ValueError("Amount must be positive.")
-        new_balance = user["balance"] - amount
-        if new_balance < 0:
+        updated_balance = user["balance"] - amount
+        if updated_balance < 0:
             raise ValueError("User can't have a negative balance amount.")
-        return self.user_repo.update_user(user_id, {"balance": new_balance})
+        return self.user_repo.update_user(user_id, {"balance": updated_balance})
 
-    def generate_next_id(self) -> int:
+    def generate_next_user_id(self) -> int:
         users = self.user_repo.get_all_users()
         if not users:
             return 1
         return max(user["user_id"] for user in users) + 1
 
-    def resolve_user_identifier(self, identifier: str) -> dict | None:
-        if identifier.isdigit():
-            user = self.get_user_by_id(int(identifier))
+    def resolve_user_identifier(self, username_or_id: str) -> dict | None:
+        if username_or_id.isdigit():
+            user = self.get_user_by_id(int(username_or_id))
         else:
-            user = self.get_user_by_username(identifier)
+            user = self.get_user_by_username(username_or_id)
 
         return user

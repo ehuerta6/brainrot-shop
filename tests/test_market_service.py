@@ -59,7 +59,7 @@ class TestBuyListingHappyPath:
     ):
         _seed_purchase(temp_user_service, temp_item_service, temp_listing_service)
         temp_market_service.buy_listing(listing_id=1, buyer_id=2)
-        item = temp_item_service.get_item(1)
+        item = temp_item_service.get_item_by_id(1)
         assert item["owner_id"] == 2
 
     def test_buy_listing_unmarks_item_as_listed(
@@ -71,7 +71,7 @@ class TestBuyListingHappyPath:
     ):
         _seed_purchase(temp_user_service, temp_item_service, temp_listing_service)
         temp_market_service.buy_listing(listing_id=1, buyer_id=2)
-        item = temp_item_service.get_item(1)
+        item = temp_item_service.get_item_by_id(1)
         assert item["is_listed"] is False
 
     def test_buy_listing_deactivates_listing(
@@ -84,7 +84,7 @@ class TestBuyListingHappyPath:
         _seed_purchase(temp_user_service, temp_item_service, temp_listing_service)
         temp_market_service.buy_listing(listing_id=1, buyer_id=2)
         listing = temp_listing_service.get_listing_by_id(1)
-        assert listing["active"] is False
+        assert listing["is_active"] is False
 
 
 class TestBuyListingValidation:

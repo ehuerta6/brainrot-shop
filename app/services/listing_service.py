@@ -22,10 +22,10 @@ class ListingService:
         if item["is_listed"]:
             raise ValueError(f"Item {item_id} is already listed.")
 
-        next_id = self.generate_next_id()
+        next_listing_id = self.generate_next_listing_id()
 
         new_listing = MarketplaceListing(
-            listing_id=next_id,
+            listing_id=next_listing_id,
             seller_id=seller_id,
             item_id=item_id,
             price=price,
@@ -44,7 +44,7 @@ class ListingService:
         listing = self.listing_repo.get_listing_by_id(listing_id)
         if listing is None:
             return False
-        self.listing_repo.update_listing(listing_id, {"active": False})
+        self.listing_repo.update_listing(listing_id, {"is_active": False})
         return True
 
     def cancel_listing(self, listing_id: int) -> bool:
@@ -52,11 +52,11 @@ class ListingService:
         if listing is None:
             return False
 
-        self.listing_repo.update_listing(listing_id, {"active": False})
+        self.listing_repo.update_listing(listing_id, {"is_active": False})
         self.item_repo.update_item(listing["item_id"], {"is_listed": False})
         return True
 
-    def generate_next_id(self) -> int:
+    def generate_next_listing_id(self) -> int:
         listings = self.listing_repo.get_all_listings()
         if not listings:
             return 1

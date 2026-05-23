@@ -30,11 +30,11 @@ class ItemRepo:
         self.write_to_json(items)
         return item_dict
 
-    def update_item(self, item_id: int, updates: dict) -> dict | None:
+    def update_item(self, item_id: int, field_updates: dict) -> dict | None:
         items = self.load_from_json()
         for i, item in enumerate(items):
             if item["item_id"] == item_id:
-                items[i] = {**item, **updates}
+                items[i] = {**item, **field_updates}
                 self.write_to_json(items)
                 return items[i]
         return None

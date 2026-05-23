@@ -15,7 +15,7 @@ class MarketService:
         if not listing:
             raise ValueError(f"Listing {listing_id} does not exist.")
 
-        if not listing["active"]:
+        if not listing["is_active"]:
             raise ValueError(f"Listing {listing_id} is no longer active.")
 
         seller_id = listing["seller_id"]

@@ -2,14 +2,14 @@ from models.marketplace_listing import MarketplaceListing
 from repositories.listing_repo import ListingRepo
 
 
-def make_listing(listing_id=1, seller_id=1, item_id=1, price=50.0, active=True):
+def make_listing(listing_id=1, seller_id=1, item_id=1, price=50.0, is_active=True):
     return MarketplaceListing(
         listing_id=listing_id,
         seller_id=seller_id,
         item_id=item_id,
         price=price,
         created_at="2026-01-01T00:00:00",
-        active=active,
+        is_active=is_active,
     )
 
 
@@ -30,9 +30,9 @@ class TestListingRepo:
         assert len(temp_listing_repo.get_all_listings()) == 2
 
     def test_get_active_listings_filters_inactive(self, temp_listing_repo):
-        temp_listing_repo.save_listing(make_listing(listing_id=1, active=True))
-        temp_listing_repo.save_listing(make_listing(listing_id=2, active=False))
-        temp_listing_repo.save_listing(make_listing(listing_id=3, active=True))
+        temp_listing_repo.save_listing(make_listing(listing_id=1, is_active=True))
+        temp_listing_repo.save_listing(make_listing(listing_id=2, is_active=False))
+        temp_listing_repo.save_listing(make_listing(listing_id=3, is_active=True))
         active = temp_listing_repo.get_active_listings()
         assert len(active) == 2
 

@@ -32,7 +32,7 @@ def prompt_create_item() -> None:
         print(f"  ID:     {item['item_id']}")
         print(f"  Name:   {item['item_name']}")
         print(f"  Rarity: {item['rarity']}")
-        print(f"  Value:  {item['value']}")
+        print(f"  Value:  {item['base_value']}")
         print(f"  Owner:  {item['owner_id']}")
     except ValueError as error:
         print(f"Error: {error}")
@@ -49,7 +49,7 @@ def prompt_view_all_items() -> None:
     for item in items:
         listed = "[LISTED]" if item["is_listed"] else ""
         print(
-            f"  [{item['item_id']}] {item['item_name']} | {item['rarity']} | ${item['value']:.2f} | owner={item['owner_id']} {listed}"
+            f"  [{item['item_id']}] {item['item_name']} | {item['rarity']} | ${item['base_value']:.2f} | owner={item['owner_id']} {listed}"
         )
 
 
@@ -72,5 +72,5 @@ def prompt_view_owner_inventory() -> None:
     for item in items:
         listed = "[LISTED]" if item["is_listed"] else ""
         print(
-            f"  [{item['item_id']}] {item['item_name']} | {item['rarity']} | ${item['value']:.2f} {listed}"
+            f"  [{item['item_id']}] {item['item_name']} | {item['rarity']} | ${item['base_value']:.2f} {listed}"
         )

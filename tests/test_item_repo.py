@@ -9,7 +9,7 @@ class TestItemRepo:
             item_id=1,
             rarity="common",
             item_name="Skibidi Shield",
-            value=10.0,
+            base_value=10.0,
         )
         temp_item_repo.save_item(item)
         result = temp_item_repo.get_item_by_id(1)
@@ -21,32 +21,32 @@ class TestItemRepo:
 
     def test_get_all_items_returns_all_saved_items(self, temp_item_repo):
         temp_item_repo.save_item(
-            Item(owner_id=1, item_id=1, rarity="common", item_name="A", value=1.0)
+            Item(owner_id=1, item_id=1, rarity="common", item_name="A", base_value=1.0)
         )
         temp_item_repo.save_item(
-            Item(owner_id=1, item_id=2, rarity="rare", item_name="B", value=2.0)
+            Item(owner_id=1, item_id=2, rarity="rare", item_name="B", base_value=2.0)
         )
         temp_item_repo.save_item(
-            Item(owner_id=1, item_id=3, rarity="epic", item_name="C", value=3.0)
+            Item(owner_id=1, item_id=3, rarity="epic", item_name="C", base_value=3.0)
         )
         assert len(temp_item_repo.get_all_items()) == 3
 
     def test_get_items_by_owner_filters_correctly(self, temp_item_repo):
         temp_item_repo.save_item(
-            Item(owner_id=1, item_id=1, rarity="common", item_name="A", value=1.0)
+            Item(owner_id=1, item_id=1, rarity="common", item_name="A", base_value=1.0)
         )
         temp_item_repo.save_item(
-            Item(owner_id=2, item_id=2, rarity="rare", item_name="B", value=2.0)
+            Item(owner_id=2, item_id=2, rarity="rare", item_name="B", base_value=2.0)
         )
         temp_item_repo.save_item(
-            Item(owner_id=1, item_id=3, rarity="epic", item_name="C", value=3.0)
+            Item(owner_id=1, item_id=3, rarity="epic", item_name="C", base_value=3.0)
         )
         assert len(temp_item_repo.get_items_by_owner(1)) == 2
         assert len(temp_item_repo.get_items_by_owner(2)) == 1
 
     def test_delete_item_removes_item(self, temp_item_repo):
         temp_item_repo.save_item(
-            Item(owner_id=1, item_id=1, rarity="common", item_name="Temp", value=1.0)
+            Item(owner_id=1, item_id=1, rarity="common", item_name="Temp", base_value=1.0)
         )
         assert temp_item_repo.delete_item(1) is True
         assert temp_item_repo.get_item_by_id(1) is None
@@ -56,11 +56,11 @@ class TestItemRepo:
 
     def test_update_item_applies_changes(self, temp_item_repo):
         temp_item_repo.save_item(
-            Item(owner_id=1, item_id=1, rarity="common", item_name="Old", value=1.0)
+            Item(owner_id=1, item_id=1, rarity="common", item_name="Old", base_value=1.0)
         )
-        updated = temp_item_repo.update_item(1, {"item_name": "New", "value": 50.0})
+        updated = temp_item_repo.update_item(1, {"item_name": "New", "base_value": 50.0})
         assert updated["item_name"] == "New"
-        assert updated["value"] == 50.0
+        assert updated["base_value"] == 50.0
 
     def test_update_item_returns_none_when_not_found(self, temp_item_repo):
         assert temp_item_repo.update_item(999, {"item_name": "X"}) is None
@@ -68,7 +68,7 @@ class TestItemRepo:
     def test_data_persists_across_repo_instances(self, temp_item_repo):
         temp_item_repo.save_item(
             Item(
-                owner_id=1, item_id=1, rarity="rare", item_name="Persistent", value=25.0
+                owner_id=1, item_id=1, rarity="rare", item_name="Persistent", base_value=25.0
             )
         )
         new_repo = ItemRepo()

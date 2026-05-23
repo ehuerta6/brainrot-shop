@@ -9,7 +9,7 @@ class TestMarketplaceListingModel:
             item_id=1,
             price=50.0,
         )
-        assert listing.active is True
+        assert listing.is_active is True
 
     def test_create_listing_with_all_fields(self):
         listing = MarketplaceListing(
@@ -17,13 +17,13 @@ class TestMarketplaceListingModel:
             seller_id=2,
             item_id=7,
             price=120.0,
-            active=False,
+            is_active=False,
         )
         assert listing.listing_id == 3
         assert listing.seller_id == 2
         assert listing.item_id == 7
         assert listing.price == 120.0
-        assert listing.active is False
+        assert listing.is_active is False
 
     def test_listing_model_dump_returns_dict(self):
         listing = MarketplaceListing(

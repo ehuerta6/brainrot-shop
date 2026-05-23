@@ -6,15 +6,15 @@ user_service = UserService()
 def prompt_login() -> int | None:
     print("\n--- Login ---")
 
-    identifier = input("Enter username or user ID: ").strip()
-    if not identifier:
+    username_or_id = input("Enter username or user ID: ").strip()
+    if not username_or_id:
         print("Error: Input cannot be empty.")
         return None
 
-    user = user_service.resolve_user_identifier(identifier)
+    user = user_service.resolve_user_identifier(username_or_id)
 
     if not user:
-        print(f"User '{identifier}' not found.")
+        print(f"User '{username_or_id}' not found.")
         return None
 
     print(f"\nLogged in as {user['username']} (ID: {user['user_id']})")
@@ -60,15 +60,15 @@ def prompt_view_all_users() -> None:
 def prompt_view_user() -> None:
     print("\n--- View User ---")
 
-    identifier = input("Enter username or user ID: ").strip()
-    if not identifier:
+    username_or_id = input("Enter username or user ID: ").strip()
+    if not username_or_id:
         print("Error: Input cannot be empty.")
         return
 
-    user = user_service.resolve_user_identifier(identifier)
+    user = user_service.resolve_user_identifier(username_or_id)
 
     if not user:
-        print(f"User '{identifier}' not found.")
+        print(f"User '{username_or_id}' not found.")
         return
 
     print(f"  ID:       {user['user_id']}")

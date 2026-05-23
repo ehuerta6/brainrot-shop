@@ -13,11 +13,11 @@ def prompt_buy_listing(current_user_id: int) -> None:
         return
 
     try:
-        result = market_service.buy_listing(listing_id, current_user_id)
+        purchase_summary = market_service.buy_listing(listing_id, current_user_id)
         print(f"\nPurchase successful!")
-        print(f"  Listing ID: {result['listing_id']}")
-        print(f"  Item ID:    {result['item_id']}")
-        print(f"  Seller ID:  {result['seller_id']}")
-        print(f"  Price:      ${result['price']:.2f}")
+        print(f"  Listing ID: {purchase_summary['listing_id']}")
+        print(f"  Item ID:    {purchase_summary['item_id']}")
+        print(f"  Seller ID:  {purchase_summary['seller_id']}")
+        print(f"  Price:      ${purchase_summary['price']:.2f}")
     except ValueError as error:
         print(f"Error: {error}")

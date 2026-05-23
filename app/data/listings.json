@@ -4,13 +4,13 @@
     "seller_id": 1,
     "item_id": 1,
     "price": 200.0,
-    "active": false
+    "is_active": false
   },
   {
     "listing_id": 2,
     "seller_id": 1,
     "item_id": 2,
     "price": 50.0,
-    "active": false
+    "is_active": false
   }
 ]
