@@ -75,7 +75,7 @@ class TestItemRepo:
         new_repo.filepath = temp_item_repo.filepath
         assert new_repo.get_item_by_id(1)["item_name"] == "Persistent"
 
-    def test_load_from_json_returns_empty_list_when_file_missing(self, tmp_path):
+    def test_load_records_returns_empty_list_when_file_missing(self, tmp_path):
         repo = ItemRepo()
         repo.filepath = str(tmp_path / "nonexistent.json")
-        assert repo.load_from_json() == []
+        assert repo._load_records() == []

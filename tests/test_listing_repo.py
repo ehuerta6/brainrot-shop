@@ -58,7 +58,7 @@ class TestListingRepo:
         new_repo.filepath = temp_listing_repo.filepath
         assert new_repo.get_listing_by_id(1) is not None
 
-    def test_load_from_json_returns_empty_list_when_file_missing(self, tmp_path):
+    def test_load_records_returns_empty_list_when_file_missing(self, tmp_path):
         repo = ListingRepo()
         repo.filepath = str(tmp_path / "nonexistent.json")
-        assert repo.load_from_json() == []
+        assert repo._load_records() == []
