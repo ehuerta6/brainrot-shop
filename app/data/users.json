@@ -1,0 +1,12 @@
+[
+  {
+    "user_id": 1,
+    "username": "ehuerta6",
+    "balance": 10050.0
+  },
+  {
+    "user_id": 2,
+    "username": "test2",
+    "balance": 450.0
+  }
+]

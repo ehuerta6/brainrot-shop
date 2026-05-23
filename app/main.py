@@ -8,6 +8,7 @@ from cli.listing_cli import (
     prompt_view_active_listings,
     prompt_cancel_listing,
 )
+from cli.market_cli import prompt_buy_listing
 from cli.user_cli import (
     prompt_login,
     prompt_create_user,
@@ -63,9 +64,11 @@ while programRunning:
         print("8.  Create Listing")
         print("9.  View Active Listings")
         print("10. Cancel Listing")
+        print("-- Market --")
+        print("11. Buy Listing")
         print("--")
-        print("11. Logout")
-        print("12. Exit Program")
+        print("12. Logout")
+        print("13. Exit Program")
 
         choice = input("\nChoose: ").strip()
 
@@ -90,9 +93,11 @@ while programRunning:
         elif choice == "10":
             prompt_cancel_listing()
         elif choice == "11":
+            prompt_buy_listing(current_user_id)
+        elif choice == "12":
             print(f"Logged out from {user_data['username']}.")
             current_user_id = None
-        elif choice == "12":
+        elif choice == "13":
             programRunning = False
             print("Program Terminated")
         else:
