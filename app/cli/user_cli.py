@@ -11,10 +11,7 @@ def prompt_login() -> int | None:
         print("Error: Input cannot be empty.")
         return None
 
-    if identifier.isdigit():
-        user = user_service.get_user_by_id(int(identifier))
-    else:
-        user = user_service.get_user_by_username(identifier)
+    user = user_service.resolve_user_identifier(identifier)
 
     if not user:
         print(f"User '{identifier}' not found.")
@@ -63,15 +60,15 @@ def prompt_view_all_users() -> None:
 def prompt_view_user() -> None:
     print("\n--- View User ---")
 
-    username = input("Username: ").strip()
-    if not username:
-        print("Error: Username cannot be empty.")
+    identifier = input("Enter username or user ID: ").strip()
+    if not identifier:
+        print("Error: Input cannot be empty.")
         return
 
-    user = user_service.get_user_by_username(username)
+    user = user_service.resolve_user_identifier(identifier)
 
     if not user:
-        print(f"User '{username}' not found.")
+        print(f"User '{identifier}' not found.")
         return
 
     print(f"  ID:       {user['user_id']}")
@@ -79,13 +76,8 @@ def prompt_view_user() -> None:
     print(f"  Balance:  ${user['balance']:.2f}")
 
 
-def prompt_add_balance() -> None:
+def prompt_add_balance(current_user_id: int) -> None:
     print("\n--- Add Balance ---")
-
-    username = input("Username: ").strip()
-    if not username:
-        print("Error: Username cannot be empty.")
-        return
 
     try:
         amount = float(input("Amount to add: "))
@@ -94,7 +86,7 @@ def prompt_add_balance() -> None:
         return
 
     try:
-        user = user_service.add_balance(amount, username)
+        user = user_service.add_balance(amount, current_user_id)
         print(f"\nBalance updated!")
         print(f"  Username:    {user['username']}")
         print(f"  New Balance: ${user['balance']:.2f}")
@@ -102,13 +94,8 @@ def prompt_add_balance() -> None:
         print(f"Error: {error}")
 
 
-def prompt_remove_balance() -> None:
+def prompt_remove_balance(current_user_id: int) -> None:
     print("\n--- Remove Balance ---")
-
-    user_id = input("Username: ").strip()
-    if not user_id:
-        print("Error: Username cannot be empty.")
-        return
 
     try:
         amount = float(input("Amount to remove: "))
@@ -117,7 +104,7 @@ def prompt_remove_balance() -> None:
         return
 
     try:
-        user = user_service.remove_balance(amount, user_id)
+        user = user_service.remove_balance(amount, current_user_id)
         print(f"\nBalance updated!")
         print(f"  Username:    {user['username']}")
         print(f"  New Balance: ${user['balance']:.2f}")

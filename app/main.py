@@ -16,15 +16,15 @@ from cli.user_cli import (
     prompt_add_balance,
     prompt_remove_balance,
 )
+from services.user_service import UserService
 
-from services.user_service import (
-    get_user_by_id,
-)
+user_service = UserService()
 
 programRunning: bool = True
-current_user_data: int | None
+current_user_id: int | None = None
+
 while programRunning:
-    if current_user_data is None:
+    if current_user_id is None:
         print("\n=== Brainrot Shop - Login ===")
         print("1. Login")
         print("2. Create Account")
@@ -33,9 +33,7 @@ while programRunning:
         choice = input("\nChoose: ").strip()
 
         if choice == "1":
-            current_user = prompt_login()
-            current_user_data: dict = get_user_by_id()
-
+            current_user_id = prompt_login()
         elif choice == "2":
             prompt_create_user()
         elif choice == "3":
@@ -44,7 +42,14 @@ while programRunning:
         else:
             print("Invalid option.")
     else:
-        print(f"\n=== Brainrot Shop === (logged in as {current_user_data['username']})")
+        user_data = user_service.get_user_by_id(current_user_id)
+
+        if not user_data:
+            print("Error: Current user no longer exists. Logging out.")
+            current_user_id = None
+            continue
+
+        print(f"\n=== Brainrot Shop === (logged in as {user_data['username']})")
         print("-- Users --")
         print("1.  View All Users")
         print("2.  View User")
@@ -69,9 +74,9 @@ while programRunning:
         elif choice == "2":
             prompt_view_user()
         elif choice == "3":
-            prompt_add_balance()
+            prompt_add_balance(current_user_id)
         elif choice == "4":
-            prompt_remove_balance()
+            prompt_remove_balance(current_user_id)
         elif choice == "5":
             prompt_create_item()
         elif choice == "6":
@@ -85,8 +90,8 @@ while programRunning:
         elif choice == "10":
             prompt_cancel_listing()
         elif choice == "11":
-            print(f"Logged out from {current_user_data['username']}.")
-            current_user = None
+            print(f"Logged out from {user_data['username']}.")
+            current_user_id = None
         elif choice == "12":
             programRunning = False
             print("Program Terminated")

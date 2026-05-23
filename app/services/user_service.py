@@ -29,7 +29,7 @@ class UserService:
     def get_all_users(self) -> list[dict]:
         return self.user_repo.get_all_users()
 
-    def add_balance(self, amount: float, user_id: int) -> dict:
+    def add_balance(self, amount: float, user_id: int) -> dict | None:
         user = self.user_repo.get_user_by_id(user_id)
         if not user:
             raise ValueError(f"User {user_id} does not exist.")
@@ -38,7 +38,7 @@ class UserService:
         new_balance = user["balance"] + amount
         return self.user_repo.update_user(user_id, {"balance": new_balance})
 
-    def remove_balance(self, amount: float, user_id: id) -> dict:
+    def remove_balance(self, amount: float, user_id: int) -> dict | None:
         user = self.user_repo.get_user_by_id(user_id)
         if not user:
             raise ValueError(f"User {user_id} does not exist.")
@@ -54,3 +54,11 @@ class UserService:
         if not users:
             return 1
         return max(user["user_id"] for user in users) + 1
+
+    def resolve_user_identifier(self, identifier: str) -> dict | None:
+        if identifier.isdigit():
+            user = self.get_user_by_id(int(identifier))
+        else:
+            user = self.get_user_by_username(identifier)
+
+        return user
