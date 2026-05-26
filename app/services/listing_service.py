@@ -1,6 +1,8 @@
 from models.marketplace_listing import MarketplaceListing
 from repositories.listing_repo import ListingRepo
 from repositories.item_repo import ItemRepo
+from exceptions.listing_error import ListingNotFoundError, ListingInactiveError, InvalidPriceError
+from exceptions.item_error import ItemNotFoundError, ItemInvalidOwnershipError, ItemAlreadyListedError
 
 
 class ListingService:
@@ -10,17 +12,17 @@ class ListingService:
 
     def create_listing(self, item_id: int, seller_id: int, price: float) -> dict:
         if price <= 0:
-            raise ValueError("Price must be greater than zero.")
+            raise InvalidPriceError()
 
         item = self.item_repo.get_item_by_id(item_id)
         if item is None:
-            raise ValueError(f"Item {item_id} does not exist.")
+            raise ItemNotFoundError(item_id)
 
         if item["owner_id"] != seller_id:
-            raise ValueError(f"Seller {seller_id} does not own item {item_id}.")
+            raise ItemInvalidOwnershipError(item_id, seller_id)
 
         if item["is_listed"]:
-            raise ValueError(f"Item {item_id} is already listed.")
+            raise ItemAlreadyListedError(item_id)
 
         next_listing_id = self.generate_next_listing_id()
 

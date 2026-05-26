@@ -1,5 +1,6 @@
 from models.item import Item
 from repositories.item_repo import ItemRepo
+from exceptions.item_error import ItemNotFoundError, InvalidItemNameError, InvalidRarityError, InvalidItemValueError
 
 VALID_RARITIES = ["common", "uncommon", "rare", "epic", "legendary"]
 
@@ -12,15 +13,13 @@ class ItemService:
         self, item_name: str, rarity: str, value: float, owner_id: int
     ) -> dict:
         if not item_name.strip():
-            raise ValueError("Item name cannot be empty.")
+            raise InvalidItemNameError()
 
         if rarity.lower() not in VALID_RARITIES:
-            raise ValueError(
-                f"Invalid rarity '{rarity}'. Must be one of: {', '.join(VALID_RARITIES)}"
-            )
+            raise InvalidRarityError(rarity, VALID_RARITIES)
 
         if value < 0:
-            raise ValueError("Item value cannot be negative.")
+            raise InvalidItemValueError()
 
         next_item_id = self.generate_next_item_id()
 
@@ -46,7 +45,7 @@ class ItemService:
     def transfer_ownership(self, item_id: int, new_owner_id: int) -> dict | None:
         item = self.item_repo.get_item_by_id(item_id)
         if item is None:
-            raise ValueError(f"Item {item_id} does not exist.")
+            raise ItemNotFoundError(item_id)
         return self.item_repo.update_item(
             item_id, {"owner_id": new_owner_id, "is_listed": False}
         )

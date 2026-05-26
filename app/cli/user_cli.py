@@ -1,4 +1,5 @@
 from services.user_service import UserService
+from exceptions.base_error import BrainrotShopError
 
 user_service = UserService()
 
@@ -41,7 +42,7 @@ def prompt_create_user() -> None:
         print(f"  ID:       {user['user_id']}")
         print(f"  Username: {user['username']}")
         print(f"  Balance:  ${user['balance']:.2f}")
-    except ValueError as error:
+    except BrainrotShopError as error:
         print(f"Error: {error}")
 
 
@@ -90,7 +91,7 @@ def prompt_add_balance(current_user_id: int) -> None:
         print(f"\nBalance updated!")
         print(f"  Username:    {user['username']}")
         print(f"  New Balance: ${user['balance']:.2f}")
-    except ValueError as error:
+    except BrainrotShopError as error:
         print(f"Error: {error}")
 
 
@@ -108,5 +109,5 @@ def prompt_remove_balance(current_user_id: int) -> None:
         print(f"\nBalance updated!")
         print(f"  Username:    {user['username']}")
         print(f"  New Balance: ${user['balance']:.2f}")
-    except ValueError as error:
+    except BrainrotShopError as error:
         print(f"Error: {error}")

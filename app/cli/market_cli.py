@@ -1,4 +1,5 @@
 from services.market_service import MarketService
+from exceptions.base_error import BrainrotShopError
 
 market_service = MarketService()
 
@@ -19,5 +20,5 @@ def prompt_buy_listing(current_user_id: int) -> None:
         print(f"  Item ID:    {purchase_summary['item_id']}")
         print(f"  Seller ID:  {purchase_summary['seller_id']}")
         print(f"  Price:      ${purchase_summary['price']:.2f}")
-    except ValueError as error:
+    except BrainrotShopError as error:
         print(f"Error: {error}")

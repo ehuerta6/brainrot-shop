@@ -1,4 +1,5 @@
 from services.item_service import ItemService
+from exceptions.base_error import BrainrotShopError
 
 item_service = ItemService()
 
@@ -34,7 +35,7 @@ def prompt_create_item() -> None:
         print(f"  Rarity: {item['rarity']}")
         print(f"  Value:  {item['base_value']}")
         print(f"  Owner:  {item['owner_id']}")
-    except ValueError as error:
+    except BrainrotShopError as error:
         print(f"Error: {error}")
 
 

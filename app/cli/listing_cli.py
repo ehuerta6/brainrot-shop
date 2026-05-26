@@ -1,4 +1,5 @@
 from services.listing_service import ListingService
+from exceptions.base_error import BrainrotShopError
 
 listing_service = ListingService()
 
@@ -31,7 +32,7 @@ def prompt_create_listing() -> None:
         print(f"  Item ID:    {listing['item_id']}")
         print(f"  Seller ID:  {listing['seller_id']}")
         print(f"  Price:      ${listing['price']:.2f}")
-    except ValueError as error:
+    except BrainrotShopError as error:
         print(f"Error: {error}")
 
 

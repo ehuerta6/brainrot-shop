@@ -1,3 +1,4 @@
+from app.exceptions.user_error import DuplicateUsernameError, InsufficientBalanceError, UserNotFoundError, InvalidAmountError
 from models.user import User
 from repositories.user_repo import UserRepo
 
@@ -10,9 +11,7 @@ class UserService:
         existing_user = self.user_repo.get_user_by_username(username)
 
         if existing_user is not None:
-            raise ValueError(
-                f"User {username} already exists. Try a different username."
-            )
+            raise DuplicateUsernameError(username)
 
         next_user_id = self.generate_next_user_id()
 
@@ -32,21 +31,21 @@ class UserService:
     def add_balance(self, amount: float, user_id: int) -> dict | None:
         user = self.user_repo.get_user_by_id(user_id)
         if not user:
-            raise ValueError(f"User {user_id} does not exist.")
+            raise UserNotFoundError(user_id)
         if amount <= 0:
-            raise ValueError("Amount must be positive.")
+            raise InvalidAmountError()
         updated_balance = user["balance"] + amount
         return self.user_repo.update_user(user_id, {"balance": updated_balance})
 
     def remove_balance(self, amount: float, user_id: int) -> dict | None:
         user = self.user_repo.get_user_by_id(user_id)
         if not user:
-            raise ValueError(f"User {user_id} does not exist.")
+            raise UserNotFoundError(user_id)
         if amount <= 0:
-            raise ValueError("Amount must be positive.")
+            raise InvalidAmountError()
         updated_balance = user["balance"] - amount
         if updated_balance < 0:
-            raise ValueError("User can't have a negative balance amount.")
+            raise InsufficientBalanceError(user_id, user["balance"], amount)
         return self.user_repo.update_user(user_id, {"balance": updated_balance})
 
     def generate_next_user_id(self) -> int:
