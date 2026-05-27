@@ -1,6 +1,9 @@
 import pytest
 from app.models.item import Item
 
+from exceptions.item_error import ItemNotFoundError, ItemInvalidOwnershipError, ItemAlreadyListedError
+from exceptions.listing_error import InvalidPriceError
+
 
 class TestListingServiceCreateListing:
     def test_create_listing_returns_saved_listing(
@@ -44,14 +47,14 @@ class TestListingServiceCreateListing:
 
 class TestListingServiceOwnershipValidation:
     def test_cannot_list_nonexistent_item(self, temp_listing_service):
-        with pytest.raises(ValueError, match="does not exist"):
+        with pytest.raises(ItemNotFoundError):
             temp_listing_service.create_listing(item_id=999, seller_id=1, price=50.0)
 
     def test_cannot_list_item_you_dont_own(self, temp_listing_service, temp_item_repo):
         temp_item_repo.save_item(
             Item(owner_id=1, item_id=1, rarity="rare", item_name="Sword", base_value=50.0)
         )
-        with pytest.raises(ValueError, match="does not own"):
+        with pytest.raises(ItemInvalidOwnershipError):
             temp_listing_service.create_listing(item_id=1, seller_id=999, price=50.0)
 
     def test_cannot_list_already_listed_item(
@@ -61,7 +64,7 @@ class TestListingServiceOwnershipValidation:
             Item(owner_id=1, item_id=1, rarity="rare", item_name="Sword", base_value=50.0)
         )
         temp_listing_service.create_listing(item_id=1, seller_id=1, price=75.0)
-        with pytest.raises(ValueError, match="already listed"):
+        with pytest.raises(ItemAlreadyListedError):
             temp_listing_service.create_listing(item_id=1, seller_id=1, price=100.0)
 
     def test_price_must_be_greater_than_zero(
@@ -70,7 +73,7 @@ class TestListingServiceOwnershipValidation:
         temp_item_repo.save_item(
             Item(owner_id=1, item_id=1, rarity="rare", item_name="Sword", base_value=50.0)
         )
-        with pytest.raises(ValueError, match="greater than zero"):
+        with pytest.raises(InvalidPriceError):
             temp_listing_service.create_listing(item_id=1, seller_id=1, price=0)
 
 

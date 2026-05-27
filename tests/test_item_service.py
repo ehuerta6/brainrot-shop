@@ -1,5 +1,7 @@
 import pytest
 
+from exceptions.item_error import InvalidItemNameError, InvalidRarityError, InvalidItemValueError
+
 
 class TestItemServiceCreateItem:
     def test_create_item_returns_saved_item(self, temp_item_service):
@@ -28,19 +30,19 @@ class TestItemServiceCreateItem:
 
 class TestItemServiceValidation:
     def test_empty_name_raises_error(self, temp_item_service):
-        with pytest.raises(ValueError, match="cannot be empty"):
+        with pytest.raises(InvalidItemNameError):
             temp_item_service.create_item("", "common", 10.0, owner_id=1)
 
     def test_whitespace_only_name_raises_error(self, temp_item_service):
-        with pytest.raises(ValueError, match="cannot be empty"):
+        with pytest.raises(InvalidItemNameError):
             temp_item_service.create_item("   ", "common", 10.0, owner_id=1)
 
     def test_invalid_rarity_raises_error(self, temp_item_service):
-        with pytest.raises(ValueError, match="Invalid rarity"):
+        with pytest.raises(InvalidRarityError):
             temp_item_service.create_item("Bad Item", "mythical", 10.0, owner_id=1)
 
     def test_negative_value_raises_error(self, temp_item_service):
-        with pytest.raises(ValueError, match="cannot be negative"):
+        with pytest.raises(InvalidItemValueError):
             temp_item_service.create_item("Cheap Item", "common", -5.0, owner_id=1)
 
 

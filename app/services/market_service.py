@@ -13,8 +13,6 @@ class MarketService:
         self.user_service = UserService()
         self.item_service = ItemService()
 
-    # ── public API ──────────────────────────────────────────────
-
     def buy_listing(self, listing_id: int, buyer_id: int) -> dict:
         listing = self.listing_service.get_listing_by_id(listing_id)
         if not listing:
@@ -26,13 +24,18 @@ class MarketService:
         price = listing["price"]
         item_id = listing["item_id"]
 
+        snapshot = self._capture_state_snapshot(
+            buyer_id, seller_id, item_id, listing_id
+        )
+
         try:
             self._transfer_funds(price, buyer_id, seller_id)
             self._transfer_item(item_id, buyer_id)
             self._close_listing(listing_id)
         except Exception as e:
+            self._restore_state_snapshot(snapshot)
             print(
-                f"CRITICAL: purchase partially failed "
+                f"CRITICAL: purchase failed, state restored "
                 f"[listing={listing_id}, buyer={buyer_id}]: {e}"
             )
             raise
@@ -44,8 +47,6 @@ class MarketService:
             "seller_id": seller_id,
             "price": price,
         }
-
-    # ── private helpers ─────────────────────────────────────────
 
     def _validate_purchase(self, listing: dict, buyer_id: int) -> None:
         if not listing["is_active"]:
@@ -67,9 +68,7 @@ class MarketService:
         if buyer["balance"] < price:
             raise InsufficientBalanceError(buyer_id, buyer["balance"], price)
 
-    def _transfer_funds(
-        self, price: float, buyer_id: int, seller_id: int
-    ) -> None:
+    def _transfer_funds(self, price: float, buyer_id: int, seller_id: int) -> None:
         self.user_service.remove_balance(price, buyer_id)
         self.user_service.add_balance(price, seller_id)
 
@@ -78,3 +77,44 @@ class MarketService:
 
     def _close_listing(self, listing_id: int) -> None:
         self.listing_service.deactivate_listing(listing_id)
+
+    def _capture_state_snapshot(
+        self,
+        buyer_id: int,
+        seller_id: int,
+        item_id: int,
+        listing_id: int,
+    ) -> dict:
+        buyer = self.user_service.get_user_by_id(buyer_id)
+        seller = self.user_service.get_user_by_id(seller_id)
+        item = self.item_service.get_item_by_id(item_id)
+        listing = self.listing_service.get_listing_by_id(listing_id)
+
+        return {
+            "buyer_id": buyer_id,
+            "seller_id": seller_id,
+            "item_id": item_id,
+            "listing_id": listing_id,
+            "buyer_original_balance": buyer["balance"],
+            "seller_original_balance": seller["balance"],
+            "original_owner_id": item["owner_id"],
+            "listing_original_state": listing["is_active"],
+        }
+
+    def _restore_state_snapshot(self, snapshot: dict) -> None:
+        self.user_service.user_repo.update_user(
+            snapshot["buyer_id"],
+            {"balance": snapshot["buyer_original_balance"]},
+        )
+        self.user_service.user_repo.update_user(
+            snapshot["seller_id"],
+            {"balance": snapshot["seller_original_balance"]},
+        )
+        self.item_service.item_repo.update_item(
+            snapshot["item_id"],
+            {"owner_id": snapshot["original_owner_id"]},
+        )
+        self.listing_service.listing_repo.update_listing(
+            snapshot["listing_id"],
+            {"is_active": snapshot["listing_original_state"]},
+        )
