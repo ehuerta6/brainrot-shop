@@ -1,3 +1,5 @@
+from utils.logging_config import logging
+
 from cli.item_cli import (
     prompt_create_item,
     prompt_view_all_items,
@@ -50,7 +52,9 @@ while is_program_running:
             current_user_id = None
             continue
 
-        print(f"\n=== Brainrot Shop === (logged in as {current_user_record['username']})")
+        print(
+            f"\n=== Brainrot Shop === (logged in as {current_user_record['username']})"
+        )
         print("-- Users --")
         print("1.  View All Users")
         print("2.  View User")

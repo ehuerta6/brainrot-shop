@@ -1,8 +1,12 @@
+import logging
+
 from models.marketplace_listing import MarketplaceListing
 from repositories.listing_repo import ListingRepo
 from repositories.item_repo import ItemRepo
 from exceptions.listing_error import ListingNotFoundError, ListingInactiveError, InvalidPriceError
 from exceptions.item_error import ItemNotFoundError, ItemInvalidOwnershipError, ItemAlreadyListedError
+
+logger = logging.getLogger(__name__)
 
 
 class ListingService:
@@ -63,3 +67,6 @@ class ListingService:
         if not listings:
             return 1
         return max(listing["listing_id"] for listing in listings) + 1
+
+    def set_listing_status(self, listing_id: int, is_active: bool) -> None:
+        self.listing_repo.update_listing(listing_id, {"is_active": is_active})

@@ -1,9 +1,13 @@
+import logging
+
 from services.listing_service import ListingService
 from services.user_service import UserService
 from services.item_service import ItemService
 from exceptions.listing_error import ListingNotFoundError, ListingInactiveError
 from exceptions.market_error import CannotBuyOwnListingError
 from exceptions.user_error import UserNotFoundError, InsufficientBalanceError
+
+logger = logging.getLogger(__name__)
 
 
 class MarketService:
@@ -34,9 +38,10 @@ class MarketService:
             self._close_listing(listing_id)
         except Exception as e:
             self._restore_state_snapshot(snapshot)
-            print(
-                f"CRITICAL: purchase failed, state restored "
-                f"[listing={listing_id}, buyer={buyer_id}]: {e}"
+            logger.critical(
+                "Purchase failed, state restored "
+                "[listing=%d, buyer=%d]: %s",
+                listing_id, buyer_id, e,
             )
             raise
 
@@ -102,19 +107,19 @@ class MarketService:
         }
 
     def _restore_state_snapshot(self, snapshot: dict) -> None:
-        self.user_service.user_repo.update_user(
+        self.user_service.set_balance(
             snapshot["buyer_id"],
-            {"balance": snapshot["buyer_original_balance"]},
+            snapshot["buyer_original_balance"],
         )
-        self.user_service.user_repo.update_user(
+        self.user_service.set_balance(
             snapshot["seller_id"],
-            {"balance": snapshot["seller_original_balance"]},
+            snapshot["seller_original_balance"],
         )
-        self.item_service.item_repo.update_item(
+        self.item_service.set_owner(
             snapshot["item_id"],
-            {"owner_id": snapshot["original_owner_id"]},
+            snapshot["original_owner_id"],
         )
-        self.listing_service.listing_repo.update_listing(
+        self.listing_service.set_listing_status(
             snapshot["listing_id"],
-            {"is_active": snapshot["listing_original_state"]},
+            snapshot["listing_original_state"],
         )

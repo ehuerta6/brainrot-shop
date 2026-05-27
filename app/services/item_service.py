@@ -1,6 +1,10 @@
+import logging
+
 from models.item import Item
 from repositories.item_repo import ItemRepo
 from exceptions.item_error import ItemNotFoundError, InvalidItemNameError, InvalidRarityError, InvalidItemValueError
+
+logger = logging.getLogger(__name__)
 
 VALID_RARITIES = ["common", "uncommon", "rare", "epic", "legendary"]
 
@@ -58,3 +62,6 @@ class ItemService:
         if not items:
             return 1
         return max(item["item_id"] for item in items) + 1
+
+    def set_owner(self, item_id: int, owner_id: int) -> dict | None:
+        return self.item_repo.update_item(item_id, {"owner_id": owner_id})

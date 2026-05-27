@@ -1,6 +1,10 @@
+import logging
+
 from app.exceptions.user_error import DuplicateUsernameError, InsufficientBalanceError, UserNotFoundError, InvalidAmountError
 from models.user import User
 from repositories.user_repo import UserRepo
+
+logger = logging.getLogger(__name__)
 
 
 class UserService:
@@ -61,3 +65,6 @@ class UserService:
             user = self.get_user_by_username(username_or_id)
 
         return user
+
+    def set_balance(self, user_id: int, balance: float) -> dict | None:
+        return self.user_repo.update_user(user_id, {"balance": balance})
